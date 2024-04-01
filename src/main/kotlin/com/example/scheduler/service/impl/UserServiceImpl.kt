@@ -12,7 +12,6 @@ class UserServiceImpl  (
     private var userRepository: UserRepository,
     private val countUserPaymentService: CountUserPaymentService) : UserService {
     override fun index(): List<User> {
-        countUserPaymentService.create()
         return userRepository.findAll()!!
     }
 

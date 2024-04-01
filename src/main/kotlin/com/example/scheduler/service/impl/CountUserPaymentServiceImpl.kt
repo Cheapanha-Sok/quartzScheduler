@@ -2,12 +2,9 @@ package com.example.scheduler.service.impl
 
 import com.example.scheduler.model.CountUserPayment
 import com.example.scheduler.model.Invoice
-import com.example.scheduler.model.User
 import com.example.scheduler.repository.CountUserPaymentRepository
 import com.example.scheduler.repository.InvoiceRepository
 import com.example.scheduler.service.CountUserPaymentService
-import com.example.scheduler.service.InvoiceService
-import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Service
 
 

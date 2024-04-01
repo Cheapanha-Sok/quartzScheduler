@@ -6,6 +6,5 @@ import com.example.scheduler.model.User
 import java.util.Optional
 
 interface CountUserPaymentRepository : BaseRepository<CountUserPayment , Long> {
-
     fun findByUser(user: User): Optional<CountUserPayment>
 }
