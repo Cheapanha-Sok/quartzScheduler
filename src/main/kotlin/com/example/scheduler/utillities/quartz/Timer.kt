@@ -12,7 +12,19 @@ class Timer {
         val jobDataMap: JobDataMap = JobDataMap()
         jobDataMap.put(className.simpleName, timerInfo)
 
-        return JobBuilder.newJob(className).withIdentity(className.simpleName, "group1").setJobData(jobDataMap).build()
+        return JobBuilder.
+            newJob(className)
+                .withIdentity(className.simpleName, "group1")
+            .requestRecovery(true)
+            .storeDurably(true)
+            .withDescription("Job Builder for interval")
+                .setJobData(jobDataMap)
+                .build()
+    }
+    fun buildJobDetail(className: Class<out Job>): JobDetail {
+        return JobBuilder.
+        newJob(className).
+        withIdentity(className.simpleName, "group1").build()
     }
 
     fun buildTrigger(className: Class<out Job>, timerInfo: TimerInfo): Trigger {
@@ -26,7 +38,8 @@ class Timer {
         }
 
         return TriggerBuilder
-            .newTrigger().withIdentity(className.simpleName, "group1")
+            .newTrigger()
+            .withIdentity(className.simpleName, "group1")
             .startAt(Date(System.currentTimeMillis() + timerInfo.initialOffsetMs!!)).withSchedule(builder).build()
     }
 

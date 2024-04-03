@@ -5,6 +5,8 @@ import com.example.scheduler.model.Invoice
 import com.example.scheduler.repository.CountUserPaymentRepository
 import com.example.scheduler.repository.InvoiceRepository
 import com.example.scheduler.service.CountUserPaymentService
+import jakarta.annotation.PostConstruct
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 
@@ -12,7 +14,8 @@ import org.springframework.stereotype.Service
 
 class CountUserPaymentServiceImpl(
     private val countUserRepository: CountUserPaymentRepository,
-    private val invoiceRepository: InvoiceRepository) : CountUserPaymentService {
+    private val invoiceRepository: InvoiceRepository
+) : CountUserPaymentService {
     //    override fun create(invoice: Invoice , user : User) {
 //        val existingUser = countUserRepository.findByUser(user)
 //        if (existingUser.isPresent){
@@ -27,15 +30,16 @@ class CountUserPaymentServiceImpl(
 //            countUserRepository.save(countUserPayment)
 //        }
 //    }
+    @Transactional
     override fun create() {
-        val invoices : List<Invoice> = invoiceRepository.findAll()!!
+        val invoices: List<Invoice> = invoiceRepository.findAll()!!
         invoices.map {
             val countUserPayment = countUserRepository.findByUser(it.user!!)
-            if (countUserPayment.isPresent){
+            if (countUserPayment.isPresent) {
                 countUserPayment.get().totalPrice = it.totalPrice
                 countUserPayment.get().totalPayment = it.invoiceItems!!.count()
                 countUserRepository.save(countUserPayment.get())
-            }else{
+            } else {
                 val newRecord = CountUserPayment()
                 newRecord.user = it.user
                 newRecord.totalPrice = it.totalPrice

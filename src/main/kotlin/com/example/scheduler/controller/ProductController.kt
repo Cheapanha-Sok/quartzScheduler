@@ -3,6 +3,7 @@ package com.example.scheduler.controller
 import com.example.scheduler.dto.SellDto
 import com.example.scheduler.model.Product
 import com.example.scheduler.model.User
+import com.example.scheduler.service.CountUserPaymentService
 import com.example.scheduler.service.ProductService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("api/v1/product")
-class ProductController(private val productService: ProductService) {
+class ProductController(
+    private val productService: ProductService,
+    private val countUserPaymentService: CountUserPaymentService) {
 
     @GetMapping
     fun index() : List<Product>{

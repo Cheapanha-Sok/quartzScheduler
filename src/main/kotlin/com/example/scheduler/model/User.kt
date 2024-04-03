@@ -15,6 +15,6 @@ data class User(
     var password :String?=null,
     @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY)
     var invoices : List<Invoice> ?=null,
-    @OneToOne(mappedBy = "user" , fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user")
     var countUserPayment : CountUserPayment?=null,
 )

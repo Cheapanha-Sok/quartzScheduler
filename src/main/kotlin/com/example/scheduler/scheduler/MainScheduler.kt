@@ -27,13 +27,22 @@ class MainScheduler (
         }
 
     }
-    fun scheduleJobWithPriority(className: Class<out Job>, info: TimerInfo?) {
+    fun scheduleJobInterval(className: Class<out Job>, info: TimerInfo?) {
         try {
             val jobDetail: JobDetail = timer.buildJobDetail(className, info!!)
             val triggerDetail: Trigger = timer.buildTrigger(className,info)
             scheduler.scheduleJob(jobDetail, triggerDetail)
         } catch (e: SchedulerException) {
-            log.error(e.message , e)
+            log.error(e.message)
+        }
+    }
+    fun scheduleJobCronExpression(className: Class<out Job>, cronExpression : String) {
+        try {
+            val jobDetail: JobDetail = timer.buildJobDetail(className)
+            val triggerDetail: Trigger = timer.buildTriggerCronExpression(className,cronExpression)
+            scheduler.scheduleJob(jobDetail, triggerDetail)
+        } catch (e: SchedulerException) {
+            log.error(e.message)
         }
     }
 
@@ -49,7 +58,7 @@ class MainScheduler (
         try {
             scheduler.resumeAll()
         } catch (e: SchedulerException) {
-            throw java.lang.RuntimeException(e)
+            log.error(e.message)
         }
     }
 
@@ -58,26 +67,26 @@ class MainScheduler (
             val jobKey = JobKey(jobName, groupName)
             scheduler.resumeJob(jobKey)
         } catch (e: SchedulerException) {
-            throw java.lang.RuntimeException(e)
+            log.error(e.message)
         }
     }
 
-    fun deleteJob(jobName: String?, groupName: String?): Boolean {
+    fun deleteJob(jobName: String?, groupName: String?) {
         val jobkey = JobKey(jobName, groupName)
         try {
-            return scheduler.deleteJob(jobkey)
+            scheduler.deleteJob(jobkey)
         } catch (e: SchedulerException) {
-            throw java.lang.RuntimeException(e)
+            log.error(e.message)
         }
     }
 
-    fun deleteAllJobs(): Boolean {
+    fun deleteAllJobs() {
         try {
             val jobKeys = scheduler.getJobKeys(GroupMatcher.anyGroup())
             val jobKeysList: List<JobKey> = ArrayList(jobKeys)
-            return scheduler.deleteJobs(jobKeysList)
+            scheduler.deleteJobs(jobKeysList)
         } catch (e: SchedulerException) {
-            throw java.lang.RuntimeException(e)
+            log.error(e.message)
         }
     }
 }

@@ -16,7 +16,7 @@ data class InvoiceItem(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id" , referencedColumnName = "id")
     var product : Product?=null,
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "invoice_id" , referencedColumnName = "id")
     var invoice : Invoice?=null,
 

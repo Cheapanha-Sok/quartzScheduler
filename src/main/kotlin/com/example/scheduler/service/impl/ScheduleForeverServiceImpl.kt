@@ -13,15 +13,19 @@ class ScheduleForeverServiceImpl(
     private val mainScheduler: MainScheduler,
 ) : ScheduleForeverService {
 
-    @PostConstruct
+        @PostConstruct
     override fun run() {
         val info : TimerInfo= TimerInfo()
         info.isRunForever = false
         info.callBackData = "my call Back"
-        info.totalFireCount = 5
+        info.totalFireCount = 1
         info.remainingFireCount = info.totalFireCount
         info.initialOffsetMs = 1000L
-        info.repeatIntervalMs = 5000L
-        mainScheduler.scheduleJobWithPriority(CountUserPayment::class.java, info)
+        info.repeatIntervalMs = 10000L
+        mainScheduler.scheduleJobInterval(CountUserPayment::class.java, info)
     }
+//    @PostConstruct
+//    override fun run() {
+//        mainScheduler.scheduleJobCronExpression(CountUserPayment::class.java , "0 17 14 ? * *")
+//    }
 }

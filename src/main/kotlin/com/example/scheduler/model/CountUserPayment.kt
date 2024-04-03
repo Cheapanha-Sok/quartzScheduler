@@ -13,7 +13,7 @@ data class CountUserPayment(
     var totalPayment : Int = 0,
     @Column(name = "total_price")
     var totalPrice : Double =0.00,
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "user_id" , referencedColumnName = "id")
     var user : User?=null,
 )
