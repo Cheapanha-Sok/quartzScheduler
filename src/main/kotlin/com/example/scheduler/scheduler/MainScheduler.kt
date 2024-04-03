@@ -30,10 +30,10 @@ class MainScheduler (
     fun scheduleJobWithPriority(className: Class<out Job>, info: TimerInfo?) {
         try {
             val jobDetail: JobDetail = timer.buildJobDetail(className, info!!)
-            val triggerDetail: Trigger = timer.buildTriggerCronExpression(className,"0/5 * * * * ?")
+            val triggerDetail: Trigger = timer.buildTrigger(className,info)
             scheduler.scheduleJob(jobDetail, triggerDetail)
         } catch (e: SchedulerException) {
-            log.error(e.message)
+            log.error(e.message , e)
         }
     }
 

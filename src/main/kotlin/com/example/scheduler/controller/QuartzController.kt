@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("api/v1/schedule")
 class QuartzController(
-    private var scheduleForeverService: ScheduleForeverService
 ) {
-    @GetMapping
-    fun scheduleJob() {
-        scheduleForeverService.run()
-    }
+//    @GetMapping
+//    fun scheduleJob() {
+//        scheduleForeverService.run()
+//    }
 }

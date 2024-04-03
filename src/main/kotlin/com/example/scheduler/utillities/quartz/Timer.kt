@@ -8,35 +8,32 @@ import java.util.Date
 @Service
 class Timer {
 
-    fun buildJobDetail(className : Class<out Job> , timerInfo : TimerInfo) : JobDetail{
-        val jobDataMap : JobDataMap = JobDataMap()
-        jobDataMap.put(className.simpleName , timerInfo)
+    fun buildJobDetail(className: Class<out Job>, timerInfo: TimerInfo): JobDetail {
+        val jobDataMap: JobDataMap = JobDataMap()
+        jobDataMap.put(className.simpleName, timerInfo)
 
-        return JobBuilder.newJob(className).
-                withIdentity(className.simpleName , "group1").
-                setJobData(jobDataMap).build()
+        return JobBuilder.newJob(className).withIdentity(className.simpleName, "group1").setJobData(jobDataMap).build()
     }
 
-    fun buildTrigger(className : Class<out Job> , timerInfo: TimerInfo) : Trigger {
-        var builder : SimpleScheduleBuilder = SimpleScheduleBuilder.simpleSchedule().withIntervalInMilliseconds(timerInfo.repeatIntervalMs)
+    fun buildTrigger(className: Class<out Job>, timerInfo: TimerInfo): Trigger {
+        var builder: SimpleScheduleBuilder =
+            SimpleScheduleBuilder.simpleSchedule().withIntervalInMilliseconds(timerInfo.repeatIntervalMs!!)
 
-        builder = if (timerInfo.isRunForever){
+        builder = if (timerInfo.isRunForever!!) {
             builder.repeatForever()
-        } else{
-            builder.withRepeatCount(timerInfo.totalFireCount -1)
+        } else {
+            builder.withRepeatCount(timerInfo.totalFireCount!! - 1)
         }
 
         return TriggerBuilder
-            .newTrigger().
-                withIdentity(className.simpleName , "group1").
-                withSchedule(builder).
-                startAt(Date(System.currentTimeMillis() + timerInfo.initialOffsetMs)).
-                build()
+            .newTrigger().withIdentity(className.simpleName, "group1")
+            .startAt(Date(System.currentTimeMillis() + timerInfo.initialOffsetMs!!)).withSchedule(builder).build()
     }
-    fun buildTriggerCronExpression(className: Class<out Job> , cronExpression : String) : Trigger{
+
+    fun buildTriggerCronExpression(className: Class<out Job>, cronExpression: String): Trigger {
         return TriggerBuilder
             .newTrigger()
-            .withIdentity(className.simpleName ,"group1")
+            .withIdentity(className.simpleName, "group1")
             .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
             .build()
     }
