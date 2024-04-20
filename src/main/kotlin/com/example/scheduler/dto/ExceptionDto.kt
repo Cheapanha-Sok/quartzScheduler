@@ -6,5 +6,4 @@ data class ExceptionDto(
     val status :Int ? =null ,
     val message :String?=null ,
     val localTime: LocalTime? =null
-) {
-}
+)

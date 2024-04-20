@@ -1,5 +1,8 @@
 package com.example.scheduler.service.impl
 
+import com.example.scheduler.base.response.ObjectResponse
+import com.example.scheduler.dto.InvoiceDto
+import com.example.scheduler.dto.toDto
 import com.example.scheduler.model.Invoice
 import com.example.scheduler.model.Product
 import com.example.scheduler.model.User
@@ -35,5 +38,10 @@ class InvoiceServiceImpl(
             invoiceItemService.create(savedInvoice , product)
 //            countUserPaymentService.create(savedInvoice , user)
         }
+    }
+
+    override fun index(): ObjectResponse<List<InvoiceDto>> {
+       val invoice = invoiceRepository.findAll()!!.map { it.toDto() }
+        return ObjectResponse(invoice)
     }
 }

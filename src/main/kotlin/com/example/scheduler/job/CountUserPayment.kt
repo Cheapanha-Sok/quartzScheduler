@@ -15,14 +15,9 @@ import java.time.Instant
 @Sl4JLogger
 class CountUserPayment(
     private val countUserPaymentService: CountUserPaymentService,
-    private val userRepository: UserRepository
 ) : Job {
     override fun execute(context: JobExecutionContext?) {
-        try {
-            log.info("Start execute at : ${Time.from(Instant.now())}")
-        } catch (e: SchedulerException) {
-            throw RuntimeException("something when wrong", e)
-        }
-
+        countUserPaymentService.create()
+        log.info("Start execute at : ${Time.from(Instant.now())}")
     }
 }

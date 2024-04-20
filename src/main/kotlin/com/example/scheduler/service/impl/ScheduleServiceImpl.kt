@@ -56,19 +56,14 @@ class ScheduleServiceImpl(
 
     override fun createJob(req: JobRequest): MessageResponse {
         try {
-            val dateTime = ZonedDateTime.of(req.dateTime, req.timeZone)
-            if (dateTime.isBefore(ZonedDateTime.now())) {
-                throw InvalidDateException("Date time must be after the current time")
-            }
             val jobClass = isClassExist(req.jobClass)
-            log.info("date start${dateTime}")
             val jobDetail: JobDetail = buildJobDetail(jobClass, req)
             val trigger: Trigger = if (req.cronExpression != null) {
                 log.info("cron trigger")
-                buildCronTrigger(jobDetail, dateTime, req.cronExpression!!)
+                buildCronTrigger(jobDetail, req.cronExpression!!)
             } else {
                 log.info("simple trigger")
-                buildTrigger(jobDetail, dateTime)
+                buildTrigger(jobDetail)
             }
             scheduler.scheduleJob(jobDetail, trigger)
         } catch (e: SchedulerException) {
@@ -163,7 +158,6 @@ class ScheduleServiceImpl(
                     }
                 }
             }
-            // Update the job in the scheduler with the new JobDetail
             scheduler.addJob(jobBuilder.build(), true)
             return MessageResponse()
         } catch (e: SchedulerException) {
@@ -181,7 +175,6 @@ class ScheduleServiceImpl(
         }
     }
 
-
     private fun buildJobDetail(jobClass: Class<out Job>, req: JobRequest) =
         JobBuilder.newJob(jobClass)
             .storeDurably()
@@ -189,21 +182,19 @@ class ScheduleServiceImpl(
             .withDescription(req.description)
             .build()
 
-    private fun buildTrigger(jobDetail: JobDetail, startAt: ZonedDateTime) =
+    private fun buildTrigger(jobDetail: JobDetail) =
         TriggerBuilder.newTrigger()
             .forJob(jobDetail)
             .withIdentity("${jobDetail.key.name}-simple-trigger", jobDetail.key.name)
             .withDescription("${jobDetail.key.name} job desc")
-            .startAt(Date.from(startAt.toInstant()))
             .withSchedule(SimpleScheduleBuilder.simpleSchedule())
             .build()
 
-    private fun buildCronTrigger(jobDetail: JobDetail, startAt: ZonedDateTime, cronPattern: String) =
+    private fun buildCronTrigger(jobDetail: JobDetail, cronPattern: String) =
         TriggerBuilder.newTrigger()
             .forJob(jobDetail)
             .withIdentity("${jobDetail.key.name}-cron-trigger", jobDetail.key.name)
             .withDescription("${jobDetail.key.name} job desc")
-            .startAt(Date.from(startAt.toInstant()))
             .withSchedule(
                 CronScheduleBuilder.cronSchedule(cronPattern)
                     .withMisfireHandlingInstructionFireAndProceed()

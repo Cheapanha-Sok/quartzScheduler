@@ -1,5 +1,6 @@
 package com.example.scheduler.controller
 
+import com.example.scheduler.base.response.MessageResponse
 import com.example.scheduler.dto.SellDto
 import com.example.scheduler.model.Product
 import com.example.scheduler.model.User
@@ -24,11 +25,11 @@ class ProductController(
         return productService.index()
     }
     @PostMapping
-    fun create(@RequestBody newProduct : Product){
+    fun create(@RequestBody newProduct : Product) : MessageResponse{
         return productService.create(newProduct)
     }
     @PostMapping("/sell/{user_id}")
-    fun sell(@RequestBody sellDto: SellDto , @PathVariable("user_id") userId : Long){
+    fun sell(@RequestBody sellDto: SellDto , @PathVariable("user_id") userId : Long) : MessageResponse{
         return productService.sell(sellDto.productId!! , userId = userId)
     }
 }
